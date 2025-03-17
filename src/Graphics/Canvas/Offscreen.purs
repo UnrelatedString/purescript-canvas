@@ -1,5 +1,6 @@
 module Graphics.Canvas.Offscreen
  ( OffscreenCanvas
+ , createOffscreenCanvas
  , getHeight
  , getWidth
  , toBlob
@@ -11,10 +12,17 @@ module Graphics.Canvas.Offscreen
 import Effect (Effect)
 import Web.File.Blob (Blob)
 import Graphics.Canvas (Context2D)
+import Data.Function.Uncurried (Fn2, runFn2)
 
 -- | An OffscreenCanvas object, representing a virtual canvas which does not exist
 -- | in the document and will not be rendered.
 foreign import data OffscreenCanvas :: Type
+
+foreign import createOffscreenCanvasImpl :: Fn2 Int Int (Effect OffscreenCanvas)
+
+-- | Creates a virtual canvas with the given width and height.
+createOffscreenCanvas :: Int -> Int -> Effect OffscreenCanvas
+createOffscreenCanvas = runFn2 createOffscreenCanvasImpl
 
 -- | Gets the logical height in pixels of the virtual canvas.
 foreign import getHeight :: OffscreenCanvas -> Effect Int

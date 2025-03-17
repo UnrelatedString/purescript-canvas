@@ -1,3 +1,9 @@
+export function createOffscreenCanvasImpl(width, height) {
+  return function() {
+    return OffscreenCanvas(width, height);
+  };
+}
+
 export function getHeight(offscreen) {
   return function() {
     return offscreen.height;
