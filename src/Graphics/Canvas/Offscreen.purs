@@ -23,13 +23,13 @@ import Control.Promise (Promise, toAffE)
 -- | in the document and will not be rendered.
 foreign import data OffscreenCanvas :: Type
 
--- | Creates a virtual canvas with the given width and height.
+-- | Create a virtual canvas with the given width and height.
 foreign import createOffscreenCanvas :: { width :: Int, height :: Int } -> (Effect OffscreenCanvas)
 
--- | Gets the logical height in pixels of the virtual canvas.
+-- | Get the logical height in pixels of the virtual canvas.
 foreign import getHeight :: OffscreenCanvas -> Effect Int
 
--- | Gets the logical width in pixels of the virtual canvas.
+-- | Get the logical width in pixels of the virtual canvas.
 foreign import getWidth :: OffscreenCanvas -> Effect Int
 
 foreign import toBlobDefault :: OffscreenCanvas -> Effect (Promise Blob)

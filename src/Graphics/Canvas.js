@@ -475,32 +475,26 @@ export function createImageDataWith(arr) {
 }
 
 export function toBlobDefault(canvas) {
-  return function() {
-    return new Promise(
-      function(resolve, _reject) {
-        canvas.toBlob(resolve);
-      }
-    );
+  return function(cb) {
+    return function() {
+      return canvas.toBlob(cb);
+    };
   };
 }
 
 export function toBlobFormat(canvas, format) {
-  return function() {
-    return new Promise(
-      function(resolve, _reject) {
-        canvas.toBlob(resolve, {type: format});
-      }
-    );
+  return function(cb) {
+    return function() {
+      return canvas.toBlob(cb, {type: format});
+    };
   };
 }
 
 export function toBlobFormatQuality(canvas, format, quality) {
-  return function() {
-    return new Promise(
-      function(resolve, _reject) {
-        canvas.toBlob(resolve, {type: format, quality: quality});
-      }
-    );
+  return function(cb) {
+    return function() {
+      return canvas.toBlob(cb, {type: format, quality: quality});
+    };
   };
 }
 
