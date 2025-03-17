@@ -127,10 +127,12 @@ import Prelude
 import Effect (Effect)
 import Effect.Exception.Unsafe (unsafeThrow)
 import Data.ArrayBuffer.Types (Uint8ClampedArray)
-import Data.Function.Uncurried (Fn3, runFn3)
+import Data.Function.Uncurried (Fn2, Fn3, runFn2, runFn3)
 import Data.Maybe (Maybe(..))
 import Data.MediaType (MediaType(..))
 import Data.MediaType.Common (imagePNG, imageJPEG, imageGIF)
+import Effect.Aff (Aff)
+import Effect.Aff.Compat (EffectFnAff, fromEffectFnAff)
 
 -- | A canvas HTML element.
 foreign import data CanvasElement :: Type
@@ -669,17 +671,19 @@ blobPNG = Lossless imagePNG
 blobJPEG :: Number -> BlobFormat
 blobJPEG = Lossy imageJPEG
 
--- HOORAY CALLBACK HELLLLLLLL oh boy this needs Aff doesn't it
--- -- | Create a `Blob` of the image data on the canvas, as a PNG file.
--- foreign import toBlob :: CanvasElement -> Effect Blob
+foreign import toBlobDefault :: CanvasElement -> EffectFnAff Blob
 
--- foreign import toBlobFormat :: Fn2 String CanvasElement (Effect Blob)
--- foreign import toBlobFormatQuality :: Fn3 String CanvasElement (Effect Blob)
+-- | Create a `Blob` of the image data on the canvas, as a PNG file.
+toBlob :: CanvasElement -> Aff Blob
+toBlob = fromEffectFnAff <<< toBlobDefault
 
--- -- | Create a `Blob` of the image data on the canvas, in the specified format.
--- toBlob' :: BlobFormat -> CanvasElement -> Effect Blob
--- toBlob' (Lossless (MediaType format)) = runFn2 toBlobFormat format
--- toBlob' (Lossy (MediaType format) quality) = runFn3 toBlobFormatQuality format quality
+foreign import toBlobFormat :: Fn2 String CanvasElement (EffectFnAff Blob)
+foreign import toBlobFormatQuality :: Fn3 String CanvasElement (EffectFnAff Blob)
+
+-- | Create a `Blob` of the image data on the canvas, in the specified format.
+toBlob' :: BlobFormat -> CanvasElement -> Aff Blob
+toBlob' (Lossless (MediaType format)) = fromEffectFnAff <<< runFn2 toBlobFormat format
+toBlob' (Lossy (MediaType format) quality) = fromEffectFnAff <<< runFn3 toBlobFormatQuality format quality
 
 foreign import drawImage :: Context2D -> CanvasImageSource -> Number -> Number -> Effect Unit
 

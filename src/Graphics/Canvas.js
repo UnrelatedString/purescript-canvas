@@ -474,7 +474,17 @@ export function createImageDataWith(arr) {
   };
 }
 
-// blob
+// Wrapper into the error-argument callback style expected by Aff compat,
+// with the error callback ignored.
+function affBlob(_onError, onSuccess) {
+  return function(_cancelError, _onCancelerError, onCancelerSuccess) {
+
+  };
+}
+
+export function toBlobDefault(canvas) {
+
+}
 
 export function drawImage(ctx) {
   return function(image_source) {
