@@ -676,7 +676,7 @@ blobJPEG :: Number -> BlobFormat
 blobJPEG = Lossy imageJPEG
 
 -- Thanks to mikesol for letting me know about makeAff!
-blobCBToAff :: ((Blob -> Effect Unit) -> Effect Unit) -> Aff Blob
+blobCBToAff :: forall a. ((a -> Effect Unit) -> Effect Unit) -> Aff a
 blobCBToAff b = makeAff \cb -> b (cb <<< Right) $> mempty
 
 foreign import toBlobDefault :: CanvasElement -> (Blob -> Effect Unit) -> Effect Unit
