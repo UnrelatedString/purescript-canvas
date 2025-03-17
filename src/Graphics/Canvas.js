@@ -474,16 +474,34 @@ export function createImageDataWith(arr) {
   };
 }
 
-// Wrapper into the error-argument callback style expected by Aff compat,
-// with the error callback ignored.
-function affBlob(_onError, onSuccess) {
-  return function(_cancelError, _onCancelerError, onCancelerSuccess) {
-
+export function toBlobDefault(canvas) {
+  return function() {
+    return new Promise(
+      function(resolve, _reject) {
+        canvas.toBlob(resolve)
+      }
+    );
   };
 }
 
-export function toBlobDefault(canvas) {
+export function toBlobFormat(canvas, format) {
+  return function() {
+    return new Promise(
+      function(resolve, _reject) {
+        canvas.toBlob(resolve, {type: format})
+      }
+    );
+  };
+}
 
+export function toBlobFormatQuality(canvas, format, quality) {
+  return function() {
+    return new Promise(
+      function(resolve, _reject) {
+        canvas.toBlob(resolve, {type: format, quality: quality})
+      }
+    );
+  };
 }
 
 export function drawImage(ctx) {
