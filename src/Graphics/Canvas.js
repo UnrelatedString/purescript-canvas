@@ -474,6 +474,8 @@ export function createImageDataWith(arr) {
   };
 }
 
+// blob
+
 export function drawImage(ctx) {
   return function(image_source) {
     return function(dx) {

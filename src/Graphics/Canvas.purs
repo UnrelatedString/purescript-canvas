@@ -25,6 +25,7 @@ module Graphics.Canvas
   , RadialGradient
   , QuadraticCurve
   , BezierCurve
+  , BlobFormat(..)
 
   , getCanvasElementById
   , getContext2D
@@ -99,6 +100,11 @@ module Graphics.Canvas
   , imageDataHeight
   , imageDataBuffer
 
+  -- , toBlob
+  -- , toBlob'
+  , blobPNG
+  , blobJPEG
+
   , canvasElementToImageSource
   , drawImage
   , drawImageScale
@@ -123,6 +129,8 @@ import Effect.Exception.Unsafe (unsafeThrow)
 import Data.ArrayBuffer.Types (Uint8ClampedArray)
 import Data.Function.Uncurried (Fn3, runFn3)
 import Data.Maybe (Maybe(..))
+import Data.MediaType (MediaType(..))
+import Data.MediaType.Common (imagePNG, imageJPEG, imageGIF)
 
 -- | A canvas HTML element.
 foreign import data CanvasElement :: Type
@@ -650,6 +658,28 @@ foreign import imageDataHeight :: ImageData -> Int
 
 -- | Get the underlying buffer from an `ImageData` object.
 foreign import imageDataBuffer :: ImageData -> Uint8ClampedArray
+
+-- | Format arguments for `toBlob'`.
+-- | Quality for lossy compression is given as a `Number` between `0.0` and `1.0`.
+data BlobFormat = Lossless MediaType | Lossy MediaType Number
+
+blobPNG :: BlobFormat
+blobPNG = Lossless imagePNG
+
+blobJPEG :: Number -> BlobFormat
+blobJPEG = Lossy imageJPEG
+
+-- HOORAY CALLBACK HELLLLLLLL oh boy this needs Aff doesn't it
+-- -- | Create a `Blob` of the image data on the canvas, as a PNG file.
+-- foreign import toBlob :: CanvasElement -> Effect Blob
+
+-- foreign import toBlobFormat :: Fn2 String CanvasElement (Effect Blob)
+-- foreign import toBlobFormatQuality :: Fn3 String CanvasElement (Effect Blob)
+
+-- -- | Create a `Blob` of the image data on the canvas, in the specified format.
+-- toBlob' :: BlobFormat -> CanvasElement -> Effect Blob
+-- toBlob' (Lossless (MediaType format)) = runFn2 toBlobFormat format
+-- toBlob' (Lossy (MediaType format) quality) = runFn3 toBlobFormatQuality format quality
 
 foreign import drawImage :: Context2D -> CanvasImageSource -> Number -> Number -> Effect Unit
 

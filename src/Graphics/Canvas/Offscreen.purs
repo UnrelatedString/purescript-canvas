@@ -4,14 +4,16 @@ module Graphics.Canvas.Offscreen
  , getHeight
  , getWidth
  , toBlob
- --, toBlob'
+ , toBlob'
  , getContext2D
  -- , toImageBitmap
  ) where
 
 import Effect (Effect)
 import Web.File.Blob (Blob)
-import Graphics.Canvas (Context2D)
+import Graphics.Canvas (Context2D, BlobFormat(..))
+import Data.MediaType (MediaType(..))
+import Data.Function (Fn2, Fn3, runFn2, runFn3)
 
 -- | An OffscreenCanvas object, representing a virtual canvas which does not exist
 -- | in the document and will not be rendered.
@@ -26,14 +28,21 @@ foreign import getHeight :: OffscreenCanvas -> Effect Int
 -- | Gets the logical width in pixels of the virtual canvas.
 foreign import getWidth :: OffscreenCanvas -> Effect Int
 
--- | Creates a `Blob` of the image data on the virtual canvas, as a PNG file.
+-- | Create a `Blob` of the image data on the virtual canvas, as a PNG file.
 foreign import toBlob :: OffscreenCanvas -> Effect Blob
 
--- -- | Creates a `Blob` of the image data on the virtual canvas, in the specified format.
--- TODO: add blob stuff to normal canvas too ;_; because I feel like this merits a type for
--- both restricting MediaTypes and for capturing which ones do and don't take a quality
+foreign import toBlobFormat :: Fn2 String OffscreenCanvas (Effect Blob)
+foreign import toBlobFormatQuality :: Fn3 String OffscreenCanvas (Effect Blob)
+
+-- | Create a `Blob` of the image data on the virtual canvas, in the specified format.
+toBlob' :: BlobFormat -> OffscreenCanvas -> Effect Blob
+toBlob' (Lossless (MediaType format)) = runFn2 toBlobFormat format
+toBlob' (Lossy (MediaType format) quality) = runFn3 toBlobFormatQuality format quality
 
 -- | Get the 2D graphics context for a virtual canvas element.
+-- | Although this is a different type (`OffscreenCanvasRenderingContext2D`)
+-- | in the underlying JavaScript, `Context2D` does not expose any of the
+-- | discrepancies in functionality.
 foreign import getContext2D :: OffscreenCanvas -> Effect Context2D
 
 -- TODO: focus long enough to figure out the image bitmap thing

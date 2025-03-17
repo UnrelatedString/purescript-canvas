@@ -24,6 +24,6 @@ export function toBlob(offscreen) {
 
 export function getContext2D(offscreen) {
   return function(){
-    return offscreen.getContext();
+    return offscreen.getContext('2d');
   };
 }
