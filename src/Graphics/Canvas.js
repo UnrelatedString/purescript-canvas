@@ -478,7 +478,7 @@ export function toBlobDefault(canvas) {
   return function() {
     return new Promise(
       function(resolve, _reject) {
-        canvas.toBlob(resolve)
+        canvas.toBlob(resolve);
       }
     );
   };
@@ -488,7 +488,7 @@ export function toBlobFormat(canvas, format) {
   return function() {
     return new Promise(
       function(resolve, _reject) {
-        canvas.toBlob(resolve, {type: format})
+        canvas.toBlob(resolve, {type: format});
       }
     );
   };
@@ -498,7 +498,7 @@ export function toBlobFormatQuality(canvas, format, quality) {
   return function() {
     return new Promise(
       function(resolve, _reject) {
-        canvas.toBlob(resolve, {type: format, quality: quality})
+        canvas.toBlob(resolve, {type: format, quality: quality});
       }
     );
   };
