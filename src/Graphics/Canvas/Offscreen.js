@@ -1,6 +1,6 @@
 export function createOffscreenCanvas(dims) {
   return function() {
-    return OffscreenCanvas(dims.width, dims.height);
+    return new OffscreenCanvas(dims.width, dims.height);
   };
 }
 
