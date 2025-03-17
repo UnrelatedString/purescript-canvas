@@ -16,14 +16,26 @@ export function getWidth(offscreen) {
   };
 }
 
-export function toBlob(offscreen) {
-  return function(){
+export function toBlobDefault(offscreen) {
+  return function() {
     return offscreen.toBlob();
   };
 }
 
+export function toBlobFormat(offscreen, format) {
+  return function() {
+    return offscreen.toBlob({type: format});
+  };
+}
+
+export function toBlobFormatQuality(offscreen, format, quality) {
+  return function() {
+    return offscreen.toBlob({type: format, quality: quality});
+  };
+}
+
 export function getContext2D(offscreen) {
-  return function(){
-    return offscreen.getContext('2d');
+  return function() {
+    return offscreen.getContext("2d");
   };
 }

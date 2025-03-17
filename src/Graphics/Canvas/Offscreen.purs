@@ -9,11 +9,15 @@ module Graphics.Canvas.Offscreen
  -- , toImageBitmap
  ) where
 
+import Prelude 
+
 import Effect (Effect)
 import Web.File.Blob (Blob)
 import Graphics.Canvas (Context2D, BlobFormat(..))
 import Data.MediaType (MediaType(..))
-import Data.Function (Fn2, Fn3, runFn2, runFn3)
+import Data.Function.Uncurried (Fn2, Fn3, runFn2, runFn3)
+import Effect.Aff (Aff)
+import Control.Promise (Promise, toAffE)
 
 -- | An OffscreenCanvas object, representing a virtual canvas which does not exist
 -- | in the document and will not be rendered.
@@ -28,16 +32,19 @@ foreign import getHeight :: OffscreenCanvas -> Effect Int
 -- | Gets the logical width in pixels of the virtual canvas.
 foreign import getWidth :: OffscreenCanvas -> Effect Int
 
--- | Create a `Blob` of the image data on the virtual canvas, as a PNG file.
-foreign import toBlob :: OffscreenCanvas -> Effect Blob
+foreign import toBlobDefault :: OffscreenCanvas -> Effect (Promise Blob)
 
-foreign import toBlobFormat :: Fn2 String OffscreenCanvas (Effect Blob)
-foreign import toBlobFormatQuality :: Fn3 String OffscreenCanvas (Effect Blob)
+-- | Create a `Blob` of the image data on the virtual canvas, as a PNG file.
+toBlob :: OffscreenCanvas -> Aff Blob
+toBlob = toAffE <<< toBlobDefault
+
+foreign import toBlobFormat :: Fn2 String OffscreenCanvas (Effect (Promise Blob))
+foreign import toBlobFormatQuality :: Fn3 String Number OffscreenCanvas (Effect (Promise Blob))
 
 -- | Create a `Blob` of the image data on the virtual canvas, in the specified format.
-toBlob' :: BlobFormat -> OffscreenCanvas -> Effect Blob
-toBlob' (Lossless (MediaType format)) = runFn2 toBlobFormat format
-toBlob' (Lossy (MediaType format) quality) = runFn3 toBlobFormatQuality format quality
+toBlob' :: BlobFormat -> OffscreenCanvas -> Aff Blob
+toBlob' (Lossless (MediaType format)) = toAffE <<< runFn2 toBlobFormat format
+toBlob' (Lossy (MediaType format) quality) = toAffE <<< runFn3 toBlobFormatQuality format quality
 
 -- | Get the 2D graphics context for a virtual canvas element.
 -- | Although this is a different type (`OffscreenCanvasRenderingContext2D`)
