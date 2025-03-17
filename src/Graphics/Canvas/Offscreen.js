@@ -1,6 +1,6 @@
-export function createOffscreenCanvasImpl(width, height) {
+export function createOffscreenCanvas(dims) {
   return function() {
-    return OffscreenCanvas(width, height);
+    return OffscreenCanvas(dims.width, dims.height);
   };
 }
 
