@@ -24,6 +24,8 @@
     "purescript-effect": "^4.0.0",
     "purescript-exceptions": "^6.0.0",
     "purescript-functions": "^6.0.0",
-    "purescript-maybe": "^6.0.0"
+    "purescript-maybe": "^6.0.0",
+    "purescript-media-types": "^6.0.0",
+    "purescript-web-file": "^4.0.0"
   }
 }
