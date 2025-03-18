@@ -65,4 +65,4 @@ toBlob' (Lossy (MediaType format) quality) = toAffE <<< runFn3 toBlobFormatQuali
 -- | discrepancies in functionality.
 foreign import getContext2D :: OffscreenCanvas -> Effect Context2D
 
--- TODO: focus long enough to figure out the image bitmap thing
+-- transferToImageBitmap not added because ImageBitmap seems like a very large can of worms!
