@@ -16,6 +16,18 @@ export function getWidth(offscreen) {
   };
 }
 
+export function setHeightImpl(offscreen, h) {
+  return function() {
+    offscreen.height = h;
+  };
+}
+
+export function setWidthImpl(offscreen, w) {
+  return function() {
+    offscreen.width = w;
+  };
+}
+
 export function toBlobDefault(offscreen) {
   return function() {
     return offscreen.toBlob();

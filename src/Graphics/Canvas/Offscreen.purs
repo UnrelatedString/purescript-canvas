@@ -3,6 +3,8 @@ module Graphics.Canvas.Offscreen
  , createOffscreenCanvas
  , getHeight
  , getWidth
+ , setHeight
+ , setWidth
  , toBlob
  , toBlob'
  , getContext2D
@@ -31,6 +33,17 @@ foreign import getHeight :: OffscreenCanvas -> Effect Int
 
 -- | Get the logical width in pixels of the virtual canvas.
 foreign import getWidth :: OffscreenCanvas -> Effect Int
+
+foreign import setHeightImpl :: Fn2 OffscreenCanvas Int (Effect Unit)
+foreign import setWidthImpl :: Fn2 OffscreenCanvas Int (Effect Unit)
+
+-- | Set the logical height in pixels of the virtual canvas.
+setHeight :: OffscreenCanvas -> Int -> Effect Unit
+setHeight = runFn2 setHeightImpl
+
+-- | Set the logical width in pixels of the virtual canvas.
+setWidth :: OffscreenCanvas -> Int -> Effect Unit
+setWidth = runFn2 setWidthImpl
 
 foreign import toBlobDefault :: OffscreenCanvas -> Effect (Promise Blob)
 
